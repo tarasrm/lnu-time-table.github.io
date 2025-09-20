@@ -1,6 +1,6 @@
 :root {
     /* Main color palette - all colors in one place */
-    --primary-bg: #ffffff1a;
+    --primary-bg: #ecf0f1;
     --header-bg: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
     --time-header-bg: #34495e;
     --day-header-bg: #2c3e50;
