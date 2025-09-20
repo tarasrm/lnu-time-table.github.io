@@ -138,6 +138,54 @@ function getCurrentWeekType() {
     return currentWeek % 2 === 1 ? 1 : 2;
 }
 
+// Function to get dates for current week (Monday to Friday)
+function getCurrentWeekDates() {
+    const today = new Date();
+    const currentWeek = getCurrentWeek();
+    
+    // Calculate the Monday of the current week
+    const september1 = new Date(new Date().getFullYear(), 8, 1); // September 1st
+    if (today < september1) {
+        september1.setFullYear(september1.getFullYear() - 1);
+    }
+    
+    const timeDiff = today.getTime() - september1.getTime();
+    const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
+    const weeksPassed = Math.floor(daysDiff / 7);
+    
+    // Get Monday of current week
+    const mondayOfWeek = new Date(september1);
+    mondayOfWeek.setDate(september1.getDate() + (weeksPassed * 7));
+    
+    // Adjust to get the actual Monday (if September 1st wasn't Monday)
+    const dayOfWeek = mondayOfWeek.getDay();
+    const daysToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Sunday = 0, Monday = 1
+    mondayOfWeek.setDate(mondayOfWeek.getDate() + daysToMonday);
+    
+    // If today is weekend (Saturday or Sunday), show next week's Monday
+    const todayDayOfWeek = today.getDay();
+    if (todayDayOfWeek === 0 || todayDayOfWeek === 6) { // Sunday = 0, Saturday = 6
+        mondayOfWeek.setDate(mondayOfWeek.getDate() + 7); // Move to next week
+    }
+    
+    // Generate dates for Monday to Friday
+    const weekDates = [];
+    for (let i = 0; i < 5; i++) {
+        const date = new Date(mondayOfWeek);
+        date.setDate(mondayOfWeek.getDate() + i);
+        weekDates.push(date);
+    }
+    
+    return weekDates;
+}
+
+// Function to format date as DD.MM
+function formatDate(date) {
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    return `${day}.${month}`;
+}
+
 // Function to create lecture HTML element
 function createLectureElement(lecture, isCurrentWeek) {
     const div = document.createElement('div');
@@ -164,6 +212,9 @@ function renderTimetable() {
         Поточний тиждень: ${currentWeek} (${weekTypeText})
     `;
     
+    // Get current week dates
+    const weekDates = getCurrentWeekDates();
+    
     // Create header row
     const headerRow = document.createElement('div');
     headerRow.style.display = 'contents';
@@ -174,12 +225,15 @@ function renderTimetable() {
     timeHeader.textContent = 'Час';
     headerRow.appendChild(timeHeader);
     
-    // Day headers
+    // Day headers with dates
     const days = ['Понеділок', 'Вівторок', 'Середа', 'Четвер', 'П\'ятниця'];
-    days.forEach(day => {
+    days.forEach((day, index) => {
         const dayHeader = document.createElement('div');
         dayHeader.className = 'day-header';
-        dayHeader.textContent = day;
+        dayHeader.innerHTML = `
+            <div>${day}</div>
+            <div style="font-size: 0.7em; opacity: 0.8; margin-top: 1px;">${formatDate(weekDates[index])}</div>
+        `;
         headerRow.appendChild(dayHeader);
     });
     
@@ -251,9 +305,9 @@ function getCurrentDayIndex() {
     const today = new Date();
     const dayOfWeek = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
     
-    // If it's weekend (Saturday = 6, Sunday = 0), return Monday (0)
+    // If it's weekend (Saturday = 6, Sunday = 0), return Monday (0) for next week
     if (dayOfWeek === 0 || dayOfWeek === 6) {
-        return 0; // Monday
+        return 0; // Monday of next week
     }
     
     // Convert to Monday = 0, Tuesday = 1, etc.
@@ -280,8 +334,14 @@ function renderMobileDayView(dayIndex) {
     const currentDayDisplay = document.getElementById('currentDayDisplay');
     const currentWeekType = getCurrentWeekType();
     
-    // Update day display
-    currentDayDisplay.textContent = dayNames[dayIndex];
+    // Get current week dates
+    const weekDates = getCurrentWeekDates();
+    
+    // Update day display with date
+    currentDayDisplay.innerHTML = `
+        <div>${dayNames[dayIndex]}</div>
+        <div style="font-size: 0.8em; opacity: 0.8; margin-top: 1px;">${formatDate(weekDates[dayIndex])}</div>
+    `;
     
     // Clear previous content
     mobileDayView.innerHTML = '';
