@@ -1,3 +1,24 @@
+:root {
+    /* Main color palette - all colors in one place */
+    --primary-bg: #ffffff1a;
+    --header-bg: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    --time-header-bg: #34495e;
+    --day-header-bg: #2c3e50;
+    --current-week-bg: #2E844A;
+    --other-week-bg: #95a5a6;
+    --mobile-nav-bg: #34495e;
+    --nav-btn-bg: #2c3e50;
+    --nav-btn-hover: #1a252f;
+    --nav-btn-active: #34495e;
+    --text-primary: #2c3e50;
+    --text-white: white;
+    --border-color: #bdc3c7;
+    --empty-cell-bg: #f8f9fa;
+    --empty-cell-text: #6c757d;
+    --time-slot-bg: #ecf0f1;
+    --current-week-shadow: rgba(46, 132, 74, 0.3);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -6,7 +27,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--primary-bg);
     min-height: 100vh;
     padding: 20px;
 }
@@ -21,8 +42,8 @@ body {
 }
 
 .header {
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-    color: white;
+    background: var(--header-bg);
+    color: var(--text-white);
     padding: 30px;
     text-align: center;
 }
@@ -69,8 +90,8 @@ body {
 }
 
 .time-header {
-    background: #34495e;
-    color: white;
+    background: var(--time-header-bg);
+    color: var(--text-white);
     padding: 15px 10px;
     text-align: center;
     font-weight: bold;
@@ -78,8 +99,8 @@ body {
 }
 
 .day-header {
-    background: #2c3e50;
-    color: white;
+    background: var(--day-header-bg);
+    color: var(--text-white);
     padding: 15px 10px;
     text-align: center;
     font-weight: bold;
@@ -87,25 +108,25 @@ body {
 }
 
 .time-slot {
-    background: #ecf0f1;
+    background: var(--time-slot-bg);
     padding: 10px;
     text-align: center;
     font-weight: bold;
-    color: #2c3e50;
+    color: var(--text-primary);
     font-size: 0.9em;
 }
 
 .lecture-cell {
     background: white;
-    border: 1px solid #bdc3c7;
+    border: 1px solid var(--border-color);
     min-height: 80px;
     padding: 10px;
     position: relative;
 }
 
 .lecture {
-    background: #3498db;
-    color: white;
+    background: var(--current-week-bg);
+    color: var(--text-white);
     padding: 8px;
     margin-bottom: 5px;
     border-radius: 5px;
@@ -114,12 +135,12 @@ body {
 }
 
 .lecture.current-week {
-    background: #2E844A;
-    box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+    background: var(--current-week-bg);
+    box-shadow: 0 2px 8px var(--current-week-shadow);
 }
 
 .lecture.other-week {
-    background: #95a5a6;
+    background: var(--other-week-bg);
     opacity: 0.7;
 }
 
@@ -146,8 +167,8 @@ body {
 }
 
 .empty-cell {
-    background: #f8f9fa;
-    color: #6c757d;
+    background: var(--empty-cell-bg);
+    color: var(--empty-cell-text);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -160,15 +181,15 @@ body {
     align-items: center;
     justify-content: space-between;
     padding: 15px;
-    background: #34495e;
-    color: white;
+    background: var(--mobile-nav-bg);
+    color: var(--text-white);
     margin-bottom: 10px;
     border-radius: 8px;
 }
 
 .nav-btn {
-    background: #2c3e50;
-    color: white;
+    background: var(--nav-btn-bg);
+    color: var(--text-white);
     border: none;
     padding: 10px 15px;
     border-radius: 5px;
@@ -178,11 +199,11 @@ body {
 }
 
 .nav-btn:hover {
-    background: #1a252f;
+    background: var(--nav-btn-hover);
 }
 
 .nav-btn:active {
-    background: #34495e;
+    background: var(--nav-btn-active);
 }
 
 .current-day {
@@ -206,15 +227,15 @@ body {
 
 .mobile-time-slot {
     background: white;
-    border: 1px solid #bdc3c7;
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     padding: 15px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .mobile-time-header {
-    background: #34495e;
-    color: white;
+    background: var(--mobile-nav-bg);
+    color: var(--text-white);
     padding: 10px;
     border-radius: 5px;
     text-align: center;
@@ -223,8 +244,8 @@ body {
 }
 
 .mobile-lecture {
-    background: #3498db;
-    color: white;
+    background: var(--current-week-bg);
+    color: var(--text-white);
     padding: 12px;
     border-radius: 5px;
     margin-bottom: 8px;
@@ -233,12 +254,12 @@ body {
 }
 
 .mobile-lecture.current-week {
-    background: #2E844A;
-    box-shadow: 0 2px 8px rgba(46, 132, 74, 0.3);
+    background: var(--current-week-bg);
+    box-shadow: 0 2px 8px var(--current-week-shadow);
 }
 
 .mobile-lecture.other-week {
-    background: #95a5a6;
+    background: var(--other-week-bg);
     opacity: 0.7;
 }
 
@@ -266,10 +287,10 @@ body {
 
 .mobile-no-lectures {
     text-align: center;
-    color: #6c757d;
+    color: var(--empty-cell-text);
     font-style: italic;
     padding: 20px;
-    background: #f8f9fa;
+    background: var(--empty-cell-bg);
     border-radius: 5px;
 }
 
