@@ -415,21 +415,20 @@ function goToNextDay() {
     renderMobileDayView(currentDayIndex);
 }
 
-// Function to handle swipe gestures
+// Function to handle swipe gestures anywhere on the page
 function handleSwipe() {
     let startX = 0;
     let startY = 0;
     let endX = 0;
     let endY = 0;
     
-    const mobileDayView = document.getElementById('mobileDayView');
-    
-    mobileDayView.addEventListener('touchstart', function(e) {
+    // Add swipe listeners to the entire body for mobile
+    document.body.addEventListener('touchstart', function(e) {
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
-    });
+    }, { passive: true });
     
-    mobileDayView.addEventListener('touchend', function(e) {
+    document.body.addEventListener('touchend', function(e) {
         endX = e.changedTouches[0].clientX;
         endY = e.changedTouches[0].clientY;
         
@@ -437,6 +436,7 @@ function handleSwipe() {
         const deltaY = endY - startY;
         
         // Check if horizontal swipe is more significant than vertical
+        // Require minimum swipe distance of 50px
         if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
             if (deltaX > 0) {
                 // Swipe right - go to previous day
@@ -446,7 +446,7 @@ function handleSwipe() {
                 goToNextDay();
             }
         }
-    });
+    }, { passive: true });
 }
 
 // Function to render appropriate view based on device
