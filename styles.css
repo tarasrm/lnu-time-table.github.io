@@ -310,6 +310,10 @@ body {
         font-size: 1em;
     }
     
+    .week-info {
+        display: none;
+    }
+    
     .timetable {
         padding: 15px;
     }
@@ -359,6 +363,7 @@ body {
     .week-info .current-week {
         font-size: 0.9em;
     }
+    
     
     .timetable {
         padding: 10px;
