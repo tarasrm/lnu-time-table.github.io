@@ -352,7 +352,7 @@ function renderMobileDayView(dayIndex) {
     if (dayLectures.length === 0) {
         const noLecturesDiv = document.createElement('div');
         noLecturesDiv.className = 'mobile-no-lectures';
-        noLecturesDiv.textContent = 'Немає занять';
+        noLecturesDiv.textContent = 'Нема занять';
         mobileDayView.appendChild(noLecturesDiv);
         return;
     }
