@@ -206,6 +206,9 @@ function renderTimetable() {
     const currentWeekType = getCurrentWeekType();
     const currentWeek = getCurrentWeek();
     
+    // Clear existing content to prevent duplicates
+    timetable.innerHTML = '';
+    
     // Update week info
     const weekTypeText = currentWeekType === 1 ? 'чисельник' : 'знаменник';
     document.getElementById('currentWeekInfo').innerHTML = `
@@ -473,9 +476,15 @@ function renderAppropriateView() {
     }
 }
 
+// Flag to prevent multiple initializations
+let isInitialized = false;
+
 // Initialize the timetable when the page loads
 document.addEventListener('DOMContentLoaded', function() {
-    renderAppropriateView();
+    if (!isInitialized) {
+        renderAppropriateView();
+        isInitialized = true;
+    }
 });
 
 // Handle window resize
