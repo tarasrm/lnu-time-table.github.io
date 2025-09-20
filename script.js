@@ -1,0 +1,433 @@
+// Timetable data for group ЕКПМ-11с
+const timetableData = {
+    groupName: "ЕКПМ-11с",
+    timeSlots: [
+        { number: 6, start: "16:40", end: "18:00" },
+        { number: 7, start: "18:10", end: "19:30" },
+        { number: 8, start: "19:40", end: "21:00" }
+    ],
+    schedule: {
+        monday: [
+            {
+                lectureNumber: 6,
+                weekType: 1,
+                title: "Прийняття управлінських рішень",
+                teacher: "доц. Демко І.І.",
+                type: "сем.",
+                room: "ауд.113"
+            },
+            {
+                lectureNumber: 6,
+                weekType: 2,
+                title: "Методологія наукових досліджень та академічна доброчесність",
+                teacher: "проф. Урба С. І.",
+                type: "сем.",
+                room: "ауд.113"
+            },
+            {
+                lectureNumber: 7,
+                weekType: "every",
+                title: "Прийняття управлінських рішень",
+                teacher: "доц. Демко І.І.",
+                type: "лек.",
+                room: "ауд.113"
+            }
+        ],
+        tuesday: [
+            {
+                lectureNumber: 7,
+                weekType: 1,
+                title: "Економічне управління у бізнес-структурах",
+                teacher: "доц. Сухай О. Є.",
+                type: "сем.",
+                room: "ауд.115"
+            },
+            {
+                lectureNumber: 7,
+                weekType: 2,
+                title: "Стратегічне управління бізнесом",
+                teacher: "доц. Залога З. М.",
+                type: "сем.",
+                room: "ауд.115"
+            },
+            {
+                lectureNumber: 8,
+                weekType: "every",
+                title: "Методологія наукових досліджень та академічна доброчесність",
+                teacher: "проф. Урба С. І.",
+                type: "лек.",
+                room: "ауд.115"
+            }
+        ],
+        wednesday: [
+            {
+                lectureNumber: 7,
+                weekType: "every",
+                title: "Стратегічне управління бізнесом",
+                teacher: "доц. Залога З. М.",
+                type: "лек.",
+                room: "ауд.115"
+            },
+            {
+                lectureNumber: 8,
+                weekType: "every",
+                title: "Економічне управління у бізнес-структурах",
+                teacher: "доц. Сухай О. Є.",
+                type: "лек.",
+                room: "ауд.115"
+            }
+        ],
+        thursday: [], // No lectures
+        friday: [
+            {
+                lectureNumber: 6,
+                weekType: "every",
+                title: "Управлінський облік",
+                teacher: "доц. Пилипенко С. А.",
+                type: "лек.",
+                room: "ауд.115"
+            },
+            {
+                lectureNumber: 7,
+                weekType: 1,
+                title: "Управлінський облік",
+                teacher: "доц. Пилипенко С. А.",
+                type: "сем.",
+                room: "ауд.115"
+            },
+            {
+                lectureNumber: 7,
+                weekType: 2,
+                title: "Інноваційний розвиток бізнесу",
+                teacher: "доц. Косович Б. І.",
+                type: "сем.",
+                room: "ауд.115"
+            },
+            {
+                lectureNumber: 8,
+                weekType: "every",
+                title: "Інноваційний розвиток бізнесу",
+                teacher: "доц. Косович Б. І.",
+                type: "лек.",
+                room: "ауд.115"
+            }
+        ]
+    }
+};
+
+// Function to calculate current week from September 1st
+function getCurrentWeek() {
+    const september1 = new Date(new Date().getFullYear(), 8, 1); // September 1st (month is 0-indexed)
+    const today = new Date();
+    
+    // If we're before September 1st, use previous year
+    if (today < september1) {
+        september1.setFullYear(september1.getFullYear() - 1);
+    }
+    
+    const timeDiff = today.getTime() - september1.getTime();
+    const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
+    const weekNumber = Math.floor(daysDiff / 7) + 1;
+    
+    return weekNumber;
+}
+
+// Function to determine if current week is week 1 or week 2
+function getCurrentWeekType() {
+    const currentWeek = getCurrentWeek();
+    return currentWeek % 2 === 1 ? 1 : 2;
+}
+
+// Function to create lecture HTML element
+function createLectureElement(lecture, isCurrentWeek) {
+    const div = document.createElement('div');
+    div.className = `lecture ${isCurrentWeek ? 'current-week' : 'other-week'}`;
+    
+    div.innerHTML = `
+        <div class="lecture-number">${lecture.title}</div>
+        <div class="lecture-teacher">${lecture.teacher}</div>
+        <div class="lecture-room">${lecture.type}, ${lecture.room}</div>
+    `;
+    
+    return div;
+}
+
+// Function to render the timetable
+function renderTimetable() {
+    const timetable = document.getElementById('timetable');
+    const currentWeekType = getCurrentWeekType();
+    const currentWeek = getCurrentWeek();
+    
+    // Update week info
+    const weekTypeText = currentWeekType === 1 ? 'чисельник' : 'знаменник';
+    document.getElementById('currentWeekInfo').innerHTML = `
+        Поточний тиждень: ${currentWeek} (${weekTypeText})
+    `;
+    
+    // Create header row
+    const headerRow = document.createElement('div');
+    headerRow.style.display = 'contents';
+    
+    // Time column header
+    const timeHeader = document.createElement('div');
+    timeHeader.className = 'time-header';
+    timeHeader.textContent = 'Час';
+    headerRow.appendChild(timeHeader);
+    
+    // Day headers
+    const days = ['Понеділок', 'Вівторок', 'Середа', 'Четвер', 'П\'ятниця'];
+    days.forEach(day => {
+        const dayHeader = document.createElement('div');
+        dayHeader.className = 'day-header';
+        dayHeader.textContent = day;
+        headerRow.appendChild(dayHeader);
+    });
+    
+    timetable.appendChild(headerRow);
+    
+    // Create rows for each time slot
+    timetableData.timeSlots.forEach(timeSlot => {
+        const row = document.createElement('div');
+        row.style.display = 'contents';
+        
+        // Time slot header
+        const timeSlotDiv = document.createElement('div');
+        timeSlotDiv.className = 'time-slot';
+        timeSlotDiv.innerHTML = `
+            <div>№${timeSlot.number}</div>
+            <div>${timeSlot.start}-</div>
+            <div>${timeSlot.end}</div>
+        `;
+        row.appendChild(timeSlotDiv);
+        
+        // Day columns
+        const dayKeys = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+        dayKeys.forEach(dayKey => {
+            const cell = document.createElement('div');
+            cell.className = 'lecture-cell';
+            
+            const dayLectures = timetableData.schedule[dayKey];
+            const lecturesForThisTime = dayLectures.filter(lecture => 
+                lecture.lectureNumber === timeSlot.number
+            );
+            
+            if (lecturesForThisTime.length === 0) {
+                cell.className = 'lecture-cell empty-cell';
+                cell.textContent = 'Нема занять';
+            } else {
+                lecturesForThisTime.forEach(lecture => {
+                    let isCurrentWeek = false;
+                    
+                    if (lecture.weekType === 'every') {
+                        isCurrentWeek = true; // Always show "every week" lectures as current
+                    } else if (lecture.weekType === currentWeekType) {
+                        isCurrentWeek = true;
+                    }
+                    
+                    const lectureElement = createLectureElement(lecture, isCurrentWeek);
+                    cell.appendChild(lectureElement);
+                });
+            }
+            
+            row.appendChild(cell);
+        });
+        
+        timetable.appendChild(row);
+    });
+}
+
+// Mobile day navigation variables
+let currentDayIndex = 0;
+const dayNames = ['Понеділок', 'Вівторок', 'Середа', 'Четвер', 'П\'ятниця'];
+const dayKeys = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+
+// Function to detect if device is mobile
+function isMobile() {
+    return window.innerWidth <= 768;
+}
+
+// Function to get current day index (0 = Monday, 1 = Tuesday, etc.)
+function getCurrentDayIndex() {
+    const today = new Date();
+    const dayOfWeek = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
+    
+    // If it's weekend (Saturday = 6, Sunday = 0), return Monday (0)
+    if (dayOfWeek === 0 || dayOfWeek === 6) {
+        return 0; // Monday
+    }
+    
+    // Convert to Monday = 0, Tuesday = 1, etc.
+    return dayOfWeek - 1;
+}
+
+// Function to create mobile lecture element
+function createMobileLectureElement(lecture, isCurrentWeek) {
+    const div = document.createElement('div');
+    div.className = `mobile-lecture ${isCurrentWeek ? 'current-week' : 'other-week'}`;
+    
+    div.innerHTML = `
+        <div class="mobile-lecture-title">${lecture.title}</div>
+        <div class="mobile-lecture-teacher">${lecture.teacher}</div>
+        <div class="mobile-lecture-room">${lecture.type}, ${lecture.room}</div>
+    `;
+    
+    return div;
+}
+
+// Function to render mobile single day view
+function renderMobileDayView(dayIndex) {
+    const mobileDayView = document.getElementById('mobileDayView');
+    const currentDayDisplay = document.getElementById('currentDayDisplay');
+    const currentWeekType = getCurrentWeekType();
+    
+    // Update day display
+    currentDayDisplay.textContent = dayNames[dayIndex];
+    
+    // Clear previous content
+    mobileDayView.innerHTML = '';
+    
+    const dayKey = dayKeys[dayIndex];
+    const dayLectures = timetableData.schedule[dayKey] || [];
+    
+    if (dayLectures.length === 0) {
+        const noLecturesDiv = document.createElement('div');
+        noLecturesDiv.className = 'mobile-no-lectures';
+        noLecturesDiv.textContent = 'Немає занять';
+        mobileDayView.appendChild(noLecturesDiv);
+        return;
+    }
+    
+    // Group lectures by time slot
+    const lecturesByTime = {};
+    dayLectures.forEach(lecture => {
+        if (!lecturesByTime[lecture.lectureNumber]) {
+            lecturesByTime[lecture.lectureNumber] = [];
+        }
+        lecturesByTime[lecture.lectureNumber].push(lecture);
+    });
+    
+    // Create time slots
+    timetableData.timeSlots.forEach(timeSlot => {
+        const lecturesForThisTime = lecturesByTime[timeSlot.number] || [];
+        
+        if (lecturesForThisTime.length > 0) {
+            const timeSlotDiv = document.createElement('div');
+            timeSlotDiv.className = 'mobile-time-slot';
+            
+            const timeHeader = document.createElement('div');
+            timeHeader.className = 'mobile-time-header';
+            timeHeader.innerHTML = `
+                <div>№${timeSlot.number}</div>
+                <div>${timeSlot.start}-${timeSlot.end}</div>
+            `;
+            timeSlotDiv.appendChild(timeHeader);
+            
+            lecturesForThisTime.forEach(lecture => {
+                let isCurrentWeek = false;
+                
+                if (lecture.weekType === 'every') {
+                    isCurrentWeek = true;
+                } else if (lecture.weekType === currentWeekType) {
+                    isCurrentWeek = true;
+                }
+                
+                const lectureElement = createMobileLectureElement(lecture, isCurrentWeek);
+                timeSlotDiv.appendChild(lectureElement);
+            });
+            
+            mobileDayView.appendChild(timeSlotDiv);
+        }
+    });
+}
+
+// Function to navigate to previous day
+function goToPreviousDay() {
+    currentDayIndex = (currentDayIndex - 1 + dayNames.length) % dayNames.length;
+    renderMobileDayView(currentDayIndex);
+}
+
+// Function to navigate to next day
+function goToNextDay() {
+    currentDayIndex = (currentDayIndex + 1) % dayNames.length;
+    renderMobileDayView(currentDayIndex);
+}
+
+// Function to handle swipe gestures
+function handleSwipe() {
+    let startX = 0;
+    let startY = 0;
+    let endX = 0;
+    let endY = 0;
+    
+    const mobileDayView = document.getElementById('mobileDayView');
+    
+    mobileDayView.addEventListener('touchstart', function(e) {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+    });
+    
+    mobileDayView.addEventListener('touchend', function(e) {
+        endX = e.changedTouches[0].clientX;
+        endY = e.changedTouches[0].clientY;
+        
+        const deltaX = endX - startX;
+        const deltaY = endY - startY;
+        
+        // Check if horizontal swipe is more significant than vertical
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+            if (deltaX > 0) {
+                // Swipe right - go to previous day
+                goToPreviousDay();
+            } else {
+                // Swipe left - go to next day
+                goToNextDay();
+            }
+        }
+    });
+}
+
+// Function to render appropriate view based on device
+function renderAppropriateView() {
+    if (isMobile()) {
+        // Show mobile view
+        document.getElementById('timetable').style.display = 'none';
+        document.getElementById('mobileDayNav').style.display = 'flex';
+        document.getElementById('mobileDayView').style.display = 'block';
+        
+        // Set current day to today
+        currentDayIndex = getCurrentDayIndex();
+        renderMobileDayView(currentDayIndex);
+        
+        // Add event listeners for navigation
+        document.getElementById('prevDayBtn').onclick = goToPreviousDay;
+        document.getElementById('nextDayBtn').onclick = goToNextDay;
+        
+        // Add swipe support
+        handleSwipe();
+    } else {
+        // Show desktop view
+        document.getElementById('timetable').style.display = 'grid';
+        document.getElementById('mobileDayNav').style.display = 'none';
+        document.getElementById('mobileDayView').style.display = 'none';
+        renderTimetable();
+    }
+}
+
+// Initialize the timetable when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    renderAppropriateView();
+});
+
+// Handle window resize
+window.addEventListener('resize', function() {
+    renderAppropriateView();
+});
+
+// Update timetable every hour to handle week changes
+setInterval(function() {
+    if (isMobile()) {
+        renderMobileDayView(currentDayIndex);
+    } else {
+        renderTimetable();
+    }
+}, 60 * 60 * 1000);
