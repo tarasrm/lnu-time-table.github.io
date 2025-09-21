@@ -231,16 +231,17 @@ body {
     border-radius: 8px;
     padding: 15px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 2px;
 }
 
 .mobile-time-header {
     background: var(--mobile-nav-bg);
     color: var(--text-white);
-    padding: 10px;
+    padding: 7px;
     border-radius: 5px;
     text-align: center;
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 4px;
     font-size: 1em;
 }
 
