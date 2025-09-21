@@ -380,8 +380,10 @@ function renderMobileDayView(dayIndex) {
             const timeHeader = document.createElement('div');
             timeHeader.className = 'mobile-time-header';
             timeHeader.innerHTML = `
-                <div>№${timeSlot.number}</div>
-                <div>${timeSlot.start}-${timeSlot.end}</div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>№${timeSlot.number}</span>
+                    <span>${timeSlot.start}-${timeSlot.end}</span>
+                </div>
             `;
             timeSlotDiv.appendChild(timeHeader);
             
