@@ -115,17 +115,38 @@ const timetableData = {
     }
 };
 
+// Returns the reference date for calculations:
+// - Weekdays: today
+// - Weekends (Sat/Sun): next Monday
+function getReferenceDate() {
+    const today = new Date();
+    const dayOfWeek = today.getDay(); // 0 = Sun, 6 = Sat
+    if (dayOfWeek === 6) {
+        // Saturday → add 2 days
+        const nextMonday = new Date(today);
+        nextMonday.setDate(today.getDate() + 2);
+        return nextMonday;
+    }
+    if (dayOfWeek === 0) {
+        // Sunday → add 1 day
+        const nextMonday = new Date(today);
+        nextMonday.setDate(today.getDate() + 1);
+        return nextMonday;
+    }
+    return today;
+}
+
 // Function to calculate current week from September 1st
 function getCurrentWeek() {
     const september1 = new Date(new Date().getFullYear(), 8, 1); // September 1st (month is 0-indexed)
-    const today = new Date();
+    const referenceDate = getReferenceDate();
     
     // If we're before September 1st, use previous year
-    if (today < september1) {
+    if (referenceDate < september1) {
         september1.setFullYear(september1.getFullYear() - 1);
     }
     
-    const timeDiff = today.getTime() - september1.getTime();
+    const timeDiff = referenceDate.getTime() - september1.getTime();
     const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
     const weekNumber = Math.floor(daysDiff / 7) + 1;
     
@@ -140,16 +161,16 @@ function getCurrentWeekType() {
 
 // Function to get dates for current week (Monday to Friday)
 function getCurrentWeekDates() {
-    const today = new Date();
+    const referenceDate = getReferenceDate();
     const currentWeek = getCurrentWeek();
     
     // Calculate the Monday of the current week
     const september1 = new Date(new Date().getFullYear(), 8, 1); // September 1st
-    if (today < september1) {
+    if (referenceDate < september1) {
         september1.setFullYear(september1.getFullYear() - 1);
     }
     
-    const timeDiff = today.getTime() - september1.getTime();
+    const timeDiff = referenceDate.getTime() - september1.getTime();
     const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
     const weeksPassed = Math.floor(daysDiff / 7);
     
@@ -163,7 +184,7 @@ function getCurrentWeekDates() {
     mondayOfWeek.setDate(mondayOfWeek.getDate() + daysToMonday);
     
     // If today is weekend (Saturday or Sunday), show next week's Monday
-    const todayDayOfWeek = today.getDay();
+    const todayDayOfWeek = referenceDate.getDay();
     if (todayDayOfWeek === 0 || todayDayOfWeek === 6) { // Sunday = 0, Saturday = 6
         mondayOfWeek.setDate(mondayOfWeek.getDate() + 7); // Move to next week
     }
