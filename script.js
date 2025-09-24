@@ -115,6 +115,22 @@ const timetableData = {
     }
 };
 
+// Map short type labels to full words
+function formatTypeLabel(shortLabel) {
+    if (!shortLabel) return '';
+    const trimmed = String(shortLabel).trim();
+    if (trimmed === 'лек.') return 'лекція';
+    if (trimmed === 'сем.') return 'семінар';
+    return trimmed;
+}
+
+function getTypePillClass(label) {
+    const full = formatTypeLabel(label);
+    if (full === 'лекція') return 'type-pill--lecture';
+    if (full === 'семінар') return 'type-pill--seminar';
+    return '';
+}
+
 // Returns the reference date for calculations:
 // - Weekdays: today
 // - Weekends (Sat/Sun): next Monday
@@ -214,8 +230,8 @@ function createLectureElement(lecture, isCurrentWeek) {
     
     div.innerHTML = `
         <div class="lecture-number">${lecture.title}</div>
-        <div class="lecture-teacher">${lecture.teacher}</div>
-        <div class="lecture-room">${lecture.type}, ${lecture.room}</div>
+        <div class="lecture-teacher">${lecture.teacher}, ${lecture.room}</div>
+        <div><span class="type-pill ${getTypePillClass(lecture.type)}">${formatTypeLabel(lecture.type)}</span></div>
     `;
     
     return div;
@@ -345,8 +361,8 @@ function createMobileLectureElement(lecture, isCurrentWeek) {
     
     div.innerHTML = `
         <div class="mobile-lecture-title">${lecture.title}</div>
-        <div class="mobile-lecture-teacher">${lecture.teacher}</div>
-        <div class="mobile-lecture-room">${lecture.type}, ${lecture.room}</div>
+        <div class="mobile-lecture-teacher">${lecture.teacher}, ${lecture.room}</div>
+        <div><span class="type-pill ${getTypePillClass(lecture.type)}">${formatTypeLabel(lecture.type)}</span></div>
     `;
     
     return div;

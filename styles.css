@@ -166,6 +166,24 @@ body {
     font-style: italic;
 }
 
+/* Type pill (oval) label */
+.type-pill {
+    display: inline-block;
+    padding: 2px 8px;
+    margin: 4px 8px 0 0;
+    border-radius: 9999px;
+    background: white;
+    color: var(--text-primary);
+    font-style: normal;
+    font-weight: 600;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    font-size: 0.65rem;
+}
+
+.room-text {
+    opacity: 0.95;
+}
+
 .empty-cell {
     background: var(--empty-cell-bg);
     color: var(--empty-cell-text);
@@ -285,6 +303,27 @@ body {
     font-size: 0.8em;
     opacity: 0.9;
     font-style: italic;
+}
+
+.mobile-lecture .type-pill {
+}
+
+/* Type pill color variants */
+.type-pill--lecture {
+    background: #e3f2fd;
+    color: #0d47a1;
+}
+
+.type-pill--seminar {
+    background: #ffe8cc;
+    color: rgb(223, 150, 15); 
+}
+
+/* Override pills inside inactive (grey) subjects to stay grey */
+.lecture.other-week .type-pill,
+.mobile-lecture.other-week .type-pill {
+    background: var(--primary-bg);
+    color: var(--other-week-bg);
 }
 
 .mobile-no-lectures {
