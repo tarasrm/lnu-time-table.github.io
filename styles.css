@@ -252,6 +252,19 @@ body {
     font-size: 1em;
 }
 
+.mobile-additional-header {
+    background: #F38303;
+    /* color: var(--text-white); */
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 0.9em;
+    color: #2E2E2E;
+    /* box-shadow: 0 2px 4px rgba(255, 162, 0, 0.5); */
+}
+
 .mobile-lecture {
     background: var(--current-week-bg);
     color: var(--text-white);
@@ -294,8 +307,6 @@ body {
     font-style: italic;
 }
 
-.mobile-lecture .type-pill {
-}
 
 /* Type pill color variants */
 .type-pill--lecture {
@@ -305,7 +316,7 @@ body {
 
 .type-pill--seminar {
     background: #ffe8cc;
-    color: rgb(223, 150, 15); 
+    color: #FE9339; 
 }
 
 /* Override pills inside inactive (grey) subjects to stay grey */
@@ -432,6 +443,12 @@ body {
     .mobile-time-header {
         padding: 8px;
         font-size: 0.8em;
+    }
+    
+    .mobile-additional-header {
+        padding: 8px;
+        font-size: 0.9em;
+        margin-bottom: 12px;
     }
     
     .mobile-lecture {

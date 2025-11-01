@@ -501,6 +501,7 @@ function renderMobileDayView(dayIndex) {
     
     const dayKey = dayKeys[dayIndex];
     let dayLectures = timetableData.schedule[dayKey] || [];
+    let additionalLectures = [];
     
     // Check for additional schedule items on Thursday
     if (dayKey === 'thursday' && timetableData.additionalSchedule && timetableData.additionalSchedule.thursday) {
@@ -508,12 +509,20 @@ function renderMobileDayView(dayIndex) {
         const thursdayDateStr = formatDateFull(thursdayDate);
         
         // Filter additional schedule items that match this Thursday's date
-        const additionalLectures = timetableData.additionalSchedule.thursday.filter(lecture => 
+        additionalLectures = timetableData.additionalSchedule.thursday.filter(lecture => 
             lecture.date === thursdayDateStr
         );
         
         // Merge additional lectures with regular schedule
         dayLectures = [...dayLectures, ...additionalLectures];
+    }
+    
+    // Add orange header for Thursday if there are additional schedule items
+    if (dayKey === 'thursday' && additionalLectures.length > 0) {
+        const additionalHeader = document.createElement('div');
+        additionalHeader.className = 'mobile-additional-header';
+        additionalHeader.textContent = 'Пари для відпрацювання!';
+        mobileDayView.appendChild(additionalHeader);
     }
     
     if (dayLectures.length === 0) {
