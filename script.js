@@ -112,6 +112,91 @@ const timetableData = {
                 room: "ауд.115"
             }
         ]
+    },
+    additionalSchedule: {
+        thursday: [
+            {
+                "lectureNumber": 6,
+                "weekType": "every",
+                "title": "Прийняття управлінських рішень",
+                "teacher": "доц. Демко І.І.",
+                "type": "сем.",
+                "room": "ауд. 311",
+                "date": "27.11.2025"
+            },
+            {
+                "lectureNumber": 7,
+                "weekType": "every",
+                "title": "Прийняття управлінських рішень",
+                "teacher": "доц. Демко І.І.",
+                "type": "лек.",
+                "room": "ауд. 311",
+                "date": "27.11.2025"
+            },
+            {
+                "lectureNumber": 7,
+                "weekType": "every",
+                "title": "Економічне управління у бізнес-структурах",
+                "teacher": "доц. Сухай О.Є.",
+                "type": "сем.",
+                "room": "ауд. 311",
+                "date": "06.11.2025"
+            },
+            {
+                "lectureNumber": 8,
+                "weekType": "every",
+                "title": "Методологія наукових досліджень та академічна доброчесність",
+                "teacher": "проф. Урба С.І.",
+                "type": "лек.",
+                "room": "ауд. 311",
+                "date": "06.11.2025"
+            },
+            {
+                "lectureNumber": 7,
+                "weekType": "every",
+                "title": "Стратегічне управління бізнесом",
+                "teacher": "доц. Залога З.М.",
+                "type": "лек.",
+                "room": "ауд. 311",
+                "date": "13.11.2025"
+            },
+            {
+                "lectureNumber": 8,
+                "weekType": "every",
+                "title": "Економічне управління у бізнес-структурах",
+                "teacher": "доц. Сухай О.Є.",
+                "type": "лек.",
+                "room": "ауд. 311",
+                "date": "13.11.2025"
+            },
+            {
+                "lectureNumber": 6,
+                "weekType": "every",
+                "title": "Управлінський облік",
+                "teacher": "доц. Пилипенко С.А.",
+                "type": "лек.",
+                "room": "ауд. 311",
+                "date": "20.11.2025"
+            },
+            {
+                "lectureNumber": 7,
+                "weekType": "every",
+                "title": "Управлінський облік",
+                "teacher": "доц. Пилипенко С.А.",
+                "type": "сем.",
+                "room": "ауд. 311",
+                "date": "20.11.2025"
+            },
+            {
+                "lectureNumber": 8,
+                "weekType": "every",
+                "title": "Інноваційний розвиток бізнесу",
+                "teacher": "доц. Косович Б.І.",
+                "type": "лек",
+                "room": "ауд. 311",
+                "date": "20.11.2025"
+            }
+        ]
     }
 };
 
@@ -223,6 +308,14 @@ function formatDate(date) {
     return `${day}.${month}`;
 }
 
+// Function to format date as DD.MM.YYYY (for comparing with additionalSchedule dates)
+function formatDateFull(date) {
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}.${month}.${year}`;
+}
+
 // Function to create lecture HTML element
 function createLectureElement(lecture, isCurrentWeek) {
     const div = document.createElement('div');
@@ -296,11 +389,26 @@ function renderTimetable() {
         
         // Day columns
         const dayKeys = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
-        dayKeys.forEach(dayKey => {
+        dayKeys.forEach((dayKey, dayIndex) => {
             const cell = document.createElement('div');
             cell.className = 'lecture-cell';
             
-            const dayLectures = timetableData.schedule[dayKey];
+            let dayLectures = timetableData.schedule[dayKey] || [];
+            
+            // Check for additional schedule items on Thursday
+            if (dayKey === 'thursday' && timetableData.additionalSchedule && timetableData.additionalSchedule.thursday) {
+                const thursdayDate = weekDates[dayIndex]; // Thursday is at index 3
+                const thursdayDateStr = formatDateFull(thursdayDate);
+                
+                // Filter additional schedule items that match this Thursday's date
+                const additionalLectures = timetableData.additionalSchedule.thursday.filter(lecture => 
+                    lecture.date === thursdayDateStr
+                );
+                
+                // Merge additional lectures with regular schedule
+                dayLectures = [...dayLectures, ...additionalLectures];
+            }
+            
             const lecturesForThisTime = dayLectures.filter(lecture => 
                 lecture.lectureNumber === timeSlot.number
             );
@@ -315,6 +423,11 @@ function renderTimetable() {
                     if (lecture.weekType === 'every') {
                         isCurrentWeek = true; // Always show "every week" lectures as current
                     } else if (lecture.weekType === currentWeekType) {
+                        isCurrentWeek = true;
+                    }
+                    
+                    // Additional schedule items are always shown as current week since they're date-specific
+                    if (lecture.date) {
                         isCurrentWeek = true;
                     }
                     
@@ -387,7 +500,21 @@ function renderMobileDayView(dayIndex) {
     mobileDayView.innerHTML = '';
     
     const dayKey = dayKeys[dayIndex];
-    const dayLectures = timetableData.schedule[dayKey] || [];
+    let dayLectures = timetableData.schedule[dayKey] || [];
+    
+    // Check for additional schedule items on Thursday
+    if (dayKey === 'thursday' && timetableData.additionalSchedule && timetableData.additionalSchedule.thursday) {
+        const thursdayDate = weekDates[dayIndex];
+        const thursdayDateStr = formatDateFull(thursdayDate);
+        
+        // Filter additional schedule items that match this Thursday's date
+        const additionalLectures = timetableData.additionalSchedule.thursday.filter(lecture => 
+            lecture.date === thursdayDateStr
+        );
+        
+        // Merge additional lectures with regular schedule
+        dayLectures = [...dayLectures, ...additionalLectures];
+    }
     
     if (dayLectures.length === 0) {
         const noLecturesDiv = document.createElement('div');
@@ -430,6 +557,11 @@ function renderMobileDayView(dayIndex) {
                 if (lecture.weekType === 'every') {
                     isCurrentWeek = true;
                 } else if (lecture.weekType === currentWeekType) {
+                    isCurrentWeek = true;
+                }
+                
+                // Additional schedule items are always shown as current week since they're date-specific
+                if (lecture.date) {
                     isCurrentWeek = true;
                 }
                 
